@@ -13,5 +13,7 @@ export const getHeaderLogoProps = (currentLocale: Locale): LogoProps => {
   }
   return {
     src: imgSrc,
+    width: 125.05,
+    height: 32,
   };
 };

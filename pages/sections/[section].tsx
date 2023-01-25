@@ -83,19 +83,14 @@ export default function Category({
     );
 
     const articles: Article[] = (
-      await getArticlesForSection(
-        currentLocale,
-        sectionId,
-        getZendeskUrl(),
-        val
-      )
+      await getArticlesForSection(currentLocale, sectionId, getZendeskUrl())
     ).map((article) => {
       return {
         id: article.id,
         title: article.title,
         lastEdit: {
           label: getLastUpdatedLabel(dynamicContent),
-          value: article.updated_at,
+          value: article.edited_at,
           locale: currentLocale,
         },
       };
@@ -133,10 +128,6 @@ export default function Category({
         />
       }
       strings={strings}
-      selectFilterLabel={selectFilterLabel}
-      filterSelect={true}
-      filterItems={filterItems}
-      onSelectFilterChange={handleFilterSectionChange}
     />
   );
 }

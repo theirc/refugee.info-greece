@@ -173,7 +173,6 @@ export function getShareButtonStrings(dynamicContent: {
   return {
     label: dynamicContent['default_share'],
     notificationText: dynamicContent['default_share_notification_text'],
-    linkShareButton: dynamicContent['default_banner_link_share_title'],
   };
 }
 
@@ -306,9 +305,6 @@ export function populateSearchResultsPageStrings(dynamicContent: {
     searchBarStrings: populateSearchBarStrings(dynamicContent),
     lastEditedLabel: getLastUpdatedLabel(dynamicContent),
     resultsFoundForQuery: dynamicContent['default_search_results_found'],
-    allResultsTabString: dynamicContent['default_all_results_tab'],
-    informationTabString: dynamicContent['default_information_results_tab'],
-    servicesTabString: dynamicContent['default_services_results_tab'],
   };
 }
 
