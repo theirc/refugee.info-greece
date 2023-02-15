@@ -21,6 +21,14 @@ const nextConfig = {
       },
     ];
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'signpost-greece.zendesk.com',
+      },
+    ],
+  },
 };
 
 module.exports = withLess({

@@ -19,7 +19,7 @@ export default async function handler(
 
   try {
     let time = new Date();
-    time.setHours(time.getHours() - 1);
+    time.setHours(time.getHours() - 2);
     time.setSeconds(0, 0);
     const unixTime = Math.floor(time.getTime() - 1000)
       .toString()
@@ -45,14 +45,33 @@ export default async function handler(
       }
     }
 
-    Promise.all(
+    const result = await Promise.allSettled(
       articlesToRevalidate.map(async (article) => {
         const pathToRevalidate = `/${article.locale}/articles/${article.source_id}`;
         await res.revalidate(pathToRevalidate);
       })
     );
-    return res.status(200).json({ revalidated: true });
+
+    return res.status(200).json({
+      revalidated: true,
+      articles: articlesToRevalidate,
+      time,
+      status: handleResults(result),
+    });
   } catch (err) {
     return res.status(500).send('Error revalidating ' + err);
   }
+}
+
+const isFulfilled = <T>(
+  p: PromiseSettledResult<T>
+): p is PromiseFulfilledResult<T> => p.status === 'fulfilled';
+const isRejected = <T>(
+  p: PromiseSettledResult<T>
+): p is PromiseRejectedResult => p.status === 'rejected';
+
+function handleResults(results: PromiseSettledResult<void>[]) {
+  const errors = results.filter(isRejected).map((result) => result.reason);
+  const success = results.filter(isFulfilled).map((result) => result.value);
+  return { errors, success };
 }
