@@ -1,30 +1,30 @@
-import { Directus } from '@directus/sdk';
-import { extractMetaTags } from '@ircsignpost/signpost-base/dist/src/article-content';
-import { getErrorResponseProps } from '@ircsignpost/signpost-base/dist/src/article-page';
-import CookieBanner from '@ircsignpost/signpost-base/dist/src/cookie-banner';
+import { Directus } from '@directus/sdk'
+import { extractMetaTags } from '@ircsignpost/signpost-base/dist/src/article-content'
+import { getErrorResponseProps } from '@ircsignpost/signpost-base/dist/src/article-page'
+import CookieBanner from '@ircsignpost/signpost-base/dist/src/cookie-banner'
 import {
   DirectusArticle,
   getDirectusArticle,
   getDirectusArticles,
-} from '@ircsignpost/signpost-base/dist/src/directus';
-import Footer from '@ircsignpost/signpost-base/dist/src/footer';
-import { MenuOverlayItem } from '@ircsignpost/signpost-base/dist/src/menu-overlay';
-import { createDefaultSearchBarProps } from '@ircsignpost/signpost-base/dist/src/search-bar';
-import { ServicePageStrings } from '@ircsignpost/signpost-base/dist/src/service-page';
+} from '@ircsignpost/signpost-base/dist/src/directus'
+import Footer from '@ircsignpost/signpost-base/dist/src/footer'
+import { MenuOverlayItem } from '@ircsignpost/signpost-base/dist/src/menu-overlay'
+import { createDefaultSearchBarProps } from '@ircsignpost/signpost-base/dist/src/search-bar'
+import { ServicePageStrings } from '@ircsignpost/signpost-base/dist/src/service-page'
 import ServicePage, {
   MountService,
-} from '@ircsignpost/signpost-base/dist/src/service-page';
+} from '@ircsignpost/signpost-base/dist/src/service-page'
 import {
   CategoryWithSections,
   ZendeskCategory,
   getCategories,
   getCategoriesWithSections,
   getTranslationsFromDynamicContent,
-} from '@ircsignpost/signpost-base/dist/src/zendesk';
-import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
-import { useRouter } from 'next/router';
-import React from 'react';
+} from '@ircsignpost/signpost-base/dist/src/zendesk'
+import { GetStaticProps } from 'next'
+import getConfig from 'next/config'
+import { useRouter } from 'next/router'
+import React from 'react'
 
 import {
   CATEGORIES_TO_HIDE,
@@ -39,38 +39,38 @@ import {
   SITE_TITLE,
   USE_CAT_SEC_ART_CONTENT_STRUCTURE,
   ZENDESK_AUTH_HEADER,
-} from '../../lib/constants';
+} from '../../lib/constants'
 import {
   LOCALES,
   LOCALE_CODES_TO_CANONICAL_LOCALE_CODES,
   Locale,
   getLocaleFromCode,
   getZendeskLocaleId,
-} from '../../lib/locale';
-import { getHeaderLogoProps } from '../../lib/logo';
-import { getFooterItems, getMenuItems } from '../../lib/menu';
+} from '../../lib/locale'
+import { getHeaderLogoProps } from '../../lib/logo'
+import { getFooterItems, getMenuItems } from '../../lib/menu'
 import {
   COMMON_DYNAMIC_CONTENT_PLACEHOLDERS,
   ERROR_DYNAMIC_CONTENT_PLACEHOLDERS,
   generateArticleErrorProps,
   populateMenuOverlayStrings,
   populateServicePageStrings,
-} from '../../lib/translations';
-import { getSiteUrl, getZendeskMappedUrl, getZendeskUrl } from '../../lib/url';
+} from '../../lib/translations'
+import { getSiteUrl, getZendeskMappedUrl, getZendeskUrl } from '../../lib/url'
 
 interface ServiceProps {
-  pageTitle: string;
-  serviceId: number;
-  pageUnderConstruction?: boolean;
-  siteUrl: string;
-  preview: boolean;
-  metaTagAttributes: object[];
-  lastEditedValue: string;
-  locale: Locale;
-  strings: ServicePageStrings;
-  menuOverlayItems: MenuOverlayItem[];
-  footerLinks?: MenuOverlayItem[];
-  service: DirectusArticle;
+  pageTitle: string
+  serviceId: number
+  pageUnderConstruction?: boolean
+  siteUrl: string
+  preview: boolean
+  metaTagAttributes: object[]
+  lastEditedValue: string
+  locale: Locale
+  strings: ServicePageStrings
+  menuOverlayItems: MenuOverlayItem[]
+  footerLinks?: MenuOverlayItem[]
+  service: DirectusArticle
 }
 
 export default function Service({
@@ -87,8 +87,8 @@ export default function Service({
   footerLinks,
   service,
 }: ServiceProps) {
-  const router = useRouter();
-  const { publicRuntimeConfig } = getConfig();
+  const router = useRouter()
+  const { publicRuntimeConfig } = getConfig()
 
   return (
     <ServicePage
@@ -145,59 +145,60 @@ export default function Service({
         }}
       />
     </ServicePage>
-  );
+  )
 }
 
 async function getStaticParams() {
-  const directus = new Directus(DIRECTUS_INSTANCE);
-  await directus.auth.static(DIRECTUS_AUTH_TOKEN);
-  const services = await getDirectusArticles(DIRECTUS_COUNTRY_ID, directus);
+  const directus = new Directus(DIRECTUS_INSTANCE)
+  await directus.auth.static(DIRECTUS_AUTH_TOKEN)
+  const services = await getDirectusArticles(DIRECTUS_COUNTRY_ID, directus)
   const allowedLanguageCodes = Object.values(LOCALES).map(
     (locale) => locale.directus
-  );
+  )
 
   const servicesFiltered = services?.filter((service) => {
     const translation = service.translations.find((translation) =>
       allowedLanguageCodes.includes(translation.languages_id.code)
-    );
-    return translation;
-  });
+    )
+    return translation
+  })
 
   return servicesFiltered.flatMap((service) =>
     service?.translations?.map((translation) => {
       const locale = Object.values(LOCALES).find(
         (x) => x.directus === translation.languages_id.code
-      );
+      )
 
       return {
         service: service.id.toString(),
         locale: locale?.url,
-      };
+      }
     })
-  );
+  )
 }
 
 export async function getStaticPaths() {
-  const articleParams = await getStaticParams();
+  const articleParams = await getStaticParams()
 
   return {
     paths: articleParams.map(({ service, locale }) => {
       return {
         params: { service },
         locale,
-      };
+      }
     }),
-    fallback: 'blocking',
-  };
+    // fallback: 'blocking',
+    fallback: false //Temporary patch to avoid some page errors! check later
+  }
 }
 
 function getStringPath(service: string, locale: string = 'en-us'): string {
-  return `/${locale}/services/${service}`;
+  return `/${locale}/services/${service}`
 }
 
 export async function getStringPaths(): Promise<string[]> {
-  const params = await getStaticParams();
-  return params.map((param) => getStringPath(param.service, param.locale));
+  const params = await getStaticParams()
+  return params.map((param) => getStringPath(param.service, param.locale))
 }
 
 export const getStaticProps: GetStaticProps = async ({
@@ -205,7 +206,7 @@ export const getStaticProps: GetStaticProps = async ({
   locale,
   preview,
 }) => {
-  const currentLocale = getLocaleFromCode(locale ?? '');
+  const currentLocale = getLocaleFromCode(locale ?? '')
   let dynamicContent = await getTranslationsFromDynamicContent(
     getZendeskLocaleId(currentLocale),
     [
@@ -214,50 +215,64 @@ export const getStaticProps: GetStaticProps = async ({
     ],
     getZendeskUrl(),
     ZENDESK_AUTH_HEADER
-  );
+  )
 
-  let categories: ZendeskCategory[] | CategoryWithSections[];
+  let categories: ZendeskCategory[] | CategoryWithSections[]
   if (USE_CAT_SEC_ART_CONTENT_STRUCTURE) {
     categories = await getCategoriesWithSections(
       currentLocale,
       getZendeskUrl(),
       (c) => !CATEGORIES_TO_HIDE.includes(c.id)
-    );
+    )
     categories.forEach(({ sections }) => {
       sections.forEach(
         (s) => (s.icon = SECTION_ICON_NAMES[s.id] || 'help_outline')
-      );
-    });
+      )
+    })
   } else {
-    categories = await getCategories(currentLocale, getZendeskUrl());
-    categories = categories.filter((c) => !CATEGORIES_TO_HIDE.includes(c.id));
+    categories = await getCategories(currentLocale, getZendeskUrl())
+    categories = categories.filter((c) => !CATEGORIES_TO_HIDE.includes(c.id))
     categories.forEach(
       (c) => (c.icon = CATEGORY_ICON_NAMES[c.id] || 'help_outline')
-    );
+    )
   }
 
   const menuOverlayItems = getMenuItems(
     populateMenuOverlayStrings(dynamicContent),
     categories
-  );
+  )
 
-  const strings = populateServicePageStrings(dynamicContent);
+  const strings = populateServicePageStrings(dynamicContent)
 
   const footerLinks = getFooterItems(
     populateMenuOverlayStrings(dynamicContent),
     categories
-  );
+  )
 
-  const directus = new Directus(DIRECTUS_INSTANCE);
-  await directus.auth.static(DIRECTUS_AUTH_TOKEN);
+  const directus = new Directus(DIRECTUS_INSTANCE)
+  await directus.auth.static(DIRECTUS_AUTH_TOKEN)
 
-  const service = await getDirectusArticle(Number(params?.service), directus);
+  const glb = global as any
+
+  let cachedServices: DirectusArticle[] = glb["__CACHED_SERVICES__"]
+
+  if (!cachedServices) {
+    glb["__CACHED_SERVICES__"] = (await getDirectusArticles(DIRECTUS_COUNTRY_ID, directus)) || []
+  }
+
+  const artid = Number(params?.service)
+
+  let service = cachedServices.find(s => s.id == artid) as DirectusArticle
+
+  console.log(`Found service with id ${service?.name}`)
+
+  // const service = await getDirectusArticle(Number(params?.service), directus)
 
   const serviceTranslated = service.translations.filter(
     (x) => x.languages_id.code === currentLocale.directus
-  );
+  )
 
-  service.translations = serviceTranslated;
+  service.translations = serviceTranslated
 
   // If article does not exist, return an error.
   if (!service || !service.translations.length) {
@@ -271,36 +286,36 @@ export const getStaticProps: GetStaticProps = async ({
         mappedUrl: getZendeskMappedUrl(),
         authHeader: ZENDESK_AUTH_HEADER,
       }
-    );
+    )
 
-    const subtitle = generateArticleErrorProps(dynamicContent).subtitle ?? '';
+    const subtitle = generateArticleErrorProps(dynamicContent).subtitle ?? ''
     return errorProps.notFound
       ? // When the error is notFound, router automatically redirects
-        // to 404 page which has its own logic for fetching props.
-        errorProps
+      // to 404 page which has its own logic for fetching props.
+      errorProps
       : // For other error types we have custom error handling logic inside
-        // ArticlePage component, so we pass ArticlePage's and error props.
-        {
-          props: {
-            ...errorProps,
-            pageTitle: `${subtitle} - ${SITE_TITLE}`,
-            strings,
-            menuOverlayItems,
-            siteUrl: getSiteUrl(),
-            articleId: Number(params?.article),
-            locale: currentLocale,
-            preview: preview ?? false,
-            metaTagAttributes: [],
-          },
-        };
+      // ArticlePage component, so we pass ArticlePage's and error props.
+      {
+        props: {
+          ...errorProps,
+          pageTitle: `${subtitle} - ${SITE_TITLE}`,
+          strings,
+          menuOverlayItems,
+          siteUrl: getSiteUrl(),
+          articleId: Number(params?.article),
+          locale: currentLocale,
+          preview: preview ?? false,
+          metaTagAttributes: [],
+        },
+      }
   }
 
-  service.description = serviceTranslated[0].description;
-  service.name = serviceTranslated[0].name;
+  service.description = serviceTranslated[0].description
+  service.name = serviceTranslated[0].name
 
   const [metaTagAttributes, content] = serviceTranslated[0].description
     ? extractMetaTags(serviceTranslated[0].description)
-    : [[], serviceTranslated[0].description];
+    : [[], serviceTranslated[0].description]
 
   return {
     props: {
@@ -317,5 +332,5 @@ export const getStaticProps: GetStaticProps = async ({
       service,
     },
     revalidate: REVALIDATION_TIMEOUT_SECONDS,
-  };
-};
+  }
+}
