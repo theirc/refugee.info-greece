@@ -157,7 +157,7 @@ async function getStaticParams() {
   )
 
   const servicesFiltered = services?.filter((service) => {
-    const translation = service.translations.find((translation) =>
+    const translation = service?.translations?.find((translation) =>
       allowedLanguageCodes.includes(translation.languages_id.code)
     )
     return translation
@@ -264,7 +264,7 @@ export const getStaticProps: GetStaticProps = async ({
 
   let service = cachedServices.find(s => s.id == artid) as DirectusArticle
 
-  console.log(`Found service with id ${service?.name}`)
+  // console.log(`Found service with id ${service?.name}`)
 
   // const service = await getDirectusArticle(Number(params?.service), directus)
 
