@@ -1,30 +1,30 @@
-import { extractMetaTags } from '@ircsignpost/signpost-base/dist/src/article-content';
+import { extractMetaTags } from '@ircsignpost/signpost-base/dist/src/article-content'
 import {
   ArticlePageStrings,
   getErrorResponseProps,
-} from '@ircsignpost/signpost-base/dist/src/article-page';
+} from '@ircsignpost/signpost-base/dist/src/article-page'
 import ArticlePage, {
   MountArticle,
-} from '@ircsignpost/signpost-base/dist/src/article-page';
-import CookieBanner from '@ircsignpost/signpost-base/dist/src/cookie-banner';
-import Footer from '@ircsignpost/signpost-base/dist/src/footer';
-import { MenuOverlayItem } from '@ircsignpost/signpost-base/dist/src/menu-overlay';
-import { createDefaultSearchBarProps } from '@ircsignpost/signpost-base/dist/src/search-bar';
+} from '@ircsignpost/signpost-base/dist/src/article-page'
+import CookieBanner from '@ircsignpost/signpost-base/dist/src/cookie-banner'
+import Footer from '@ircsignpost/signpost-base/dist/src/footer'
+import { MenuOverlayItem } from '@ircsignpost/signpost-base/dist/src/menu-overlay'
+import { createDefaultSearchBarProps } from '@ircsignpost/signpost-base/dist/src/search-bar'
 import {
   CategoryWithSections,
   ZendeskCategory,
   getCategoriesWithSections,
-} from '@ircsignpost/signpost-base/dist/src/zendesk';
+} from '@ircsignpost/signpost-base/dist/src/zendesk'
 import {
   getArticle,
   getArticles,
   getCategories,
   getTranslationsFromDynamicContent,
-} from '@ircsignpost/signpost-base/dist/src/zendesk';
-import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
-import { useRouter } from 'next/router';
-import React from 'react';
+} from '@ircsignpost/signpost-base/dist/src/zendesk'
+import { GetStaticProps } from 'next'
+import getConfig from 'next/config'
+import { useRouter } from 'next/router'
+import React from 'react'
 
 import {
   ABOUT_US_ARTICLE_ID,
@@ -37,40 +37,40 @@ import {
   SITE_TITLE,
   USE_CAT_SEC_ART_CONTENT_STRUCTURE,
   ZENDESK_AUTH_HEADER,
-} from '../../lib/constants';
+} from '../../lib/constants'
 import {
   LOCALES,
   LOCALE_CODES_TO_CANONICAL_LOCALE_CODES,
   Locale,
   getLocaleFromCode,
   getZendeskLocaleId,
-} from '../../lib/locale';
-import { getHeaderLogoProps } from '../../lib/logo';
-import { getFooterItems, getMenuItems } from '../../lib/menu';
+} from '../../lib/locale'
+import { getHeaderLogoProps } from '../../lib/logo'
+import { getFooterItems, getMenuItems } from '../../lib/menu'
 import {
   COMMON_DYNAMIC_CONTENT_PLACEHOLDERS,
   ERROR_DYNAMIC_CONTENT_PLACEHOLDERS,
   generateArticleErrorProps,
   populateArticlePageStrings,
   populateMenuOverlayStrings,
-} from '../../lib/translations';
-import { getSiteUrl, getZendeskMappedUrl, getZendeskUrl } from '../../lib/url';
+} from '../../lib/translations'
+import { getSiteUrl, getZendeskMappedUrl, getZendeskUrl } from '../../lib/url'
 
 interface ArticleProps {
-  pageTitle: string;
-  articleTitle: string;
-  articleContent: string;
-  metaTagAttributes: object[];
-  siteUrl: string;
-  articleId: number;
-  lastEditedValue: string;
-  locale: Locale;
-  pageUnderConstruction?: boolean;
-  preview: boolean;
-  strings: ArticlePageStrings;
+  pageTitle: string
+  articleTitle: string
+  articleContent: string
+  metaTagAttributes: object[]
+  siteUrl: string
+  articleId: number
+  lastEditedValue: string
+  locale: Locale
+  pageUnderConstruction?: boolean
+  preview: boolean
+  strings: ArticlePageStrings
   // A list of |MenuOverlayItem|s to be displayed in the header and side menu.
-  menuOverlayItems: MenuOverlayItem[];
-  footerLinks?: MenuOverlayItem[];
+  menuOverlayItems: MenuOverlayItem[]
+  footerLinks?: MenuOverlayItem[]
 }
 
 export default function Article({
@@ -88,8 +88,8 @@ export default function Article({
   menuOverlayItems,
   footerLinks,
 }: ArticleProps) {
-  const router = useRouter();
-  const { publicRuntimeConfig } = getConfig();
+  const router = useRouter()
+  const { publicRuntimeConfig } = getConfig()
 
   return (
     <ArticlePage
@@ -146,7 +146,7 @@ export default function Article({
         }}
       />
     </ArticlePage>
-  );
+  )
 }
 
 async function getStaticParams() {
@@ -154,7 +154,7 @@ async function getStaticParams() {
     Object.values(LOCALES).map(
       async (locale) => await getArticles(locale, getZendeskUrl())
     )
-  );
+  )
 
   return articles
     .flat()
@@ -163,31 +163,32 @@ async function getStaticParams() {
       return {
         article: article.id.toString(),
         locale: article.locale,
-      };
-    });
+      }
+    })
 }
 
 export async function getStaticPaths() {
-  const articleParams = await getStaticParams();
+  const articleParams = await getStaticParams()
 
   return {
     paths: articleParams.map(({ article, locale }) => {
       return {
         params: { article },
         locale,
-      };
+      }
     }),
-    fallback: 'blocking',
-  };
+    fallback: false //Temporary patch to avoid some page errors! check later
+    // fallback: 'blocking',
+  }
 }
 
 function getStringPath(article: string, locale: string): string {
-  return `/${locale}/articles/${article}`;
+  return `/${locale}/articles/${article}`
 }
 
 export async function getStringPaths(): Promise<string[]> {
-  const params = await getStaticParams();
-  return params.map((param) => getStringPath(param.article, param.locale));
+  const params = await getStaticParams()
+  return params.map((param) => getStringPath(param.article, param.locale))
 }
 
 export const getStaticProps: GetStaticProps = async ({
@@ -195,7 +196,7 @@ export const getStaticProps: GetStaticProps = async ({
   locale,
   preview,
 }) => {
-  const currentLocale = getLocaleFromCode(locale ?? '');
+  const currentLocale = getLocaleFromCode(locale ?? '')
   let dynamicContent = await getTranslationsFromDynamicContent(
     getZendeskLocaleId(currentLocale),
     [
@@ -204,49 +205,49 @@ export const getStaticProps: GetStaticProps = async ({
     ],
     getZendeskUrl(),
     ZENDESK_AUTH_HEADER
-  );
+  )
 
-  let categories: ZendeskCategory[] | CategoryWithSections[];
-  let menuCategories: ZendeskCategory[] | CategoryWithSections[];
+  let categories: ZendeskCategory[] | CategoryWithSections[]
+  let menuCategories: ZendeskCategory[] | CategoryWithSections[]
   if (USE_CAT_SEC_ART_CONTENT_STRUCTURE) {
     categories = await getCategoriesWithSections(
       currentLocale,
       getZendeskUrl(),
       (c) => !CATEGORIES_TO_HIDE.includes(c.id)
-    );
+    )
     categories.forEach(({ sections }) => {
       sections.forEach(
         (s) => (s.icon = SECTION_ICON_NAMES[s.id] || 'help_outline')
-      );
-    });
+      )
+    })
     menuCategories = await getCategoriesWithSections(
       currentLocale,
       getZendeskUrl(),
       (c) => !MENU_CATEGORIES_TO_HIDE.includes(c.id)
-    );
+    )
   } else {
-    categories = await getCategories(currentLocale, getZendeskUrl());
-    categories = categories.filter((c) => !CATEGORIES_TO_HIDE.includes(c.id));
+    categories = await getCategories(currentLocale, getZendeskUrl())
+    categories = categories.filter((c) => !CATEGORIES_TO_HIDE.includes(c.id))
     categories.forEach(
       (c) => (c.icon = CATEGORY_ICON_NAMES[c.id] || 'help_outline')
-    );
-    menuCategories = await getCategories(currentLocale, getZendeskUrl());
+    )
+    menuCategories = await getCategories(currentLocale, getZendeskUrl())
     menuCategories = menuCategories.filter(
       (c) => !MENU_CATEGORIES_TO_HIDE.includes(c.id)
-    );
+    )
   }
 
   const menuOverlayItems = getMenuItems(
     populateMenuOverlayStrings(dynamicContent),
     menuCategories
-  );
+  )
 
   const footerLinks = getFooterItems(
     populateMenuOverlayStrings(dynamicContent),
     menuCategories
-  );
+  )
 
-  const strings = populateArticlePageStrings(dynamicContent);
+  const strings = populateArticlePageStrings(dynamicContent)
 
   const article = await getArticle(
     currentLocale,
@@ -255,7 +256,7 @@ export const getStaticProps: GetStaticProps = async ({
     getZendeskMappedUrl(),
     ZENDESK_AUTH_HEADER,
     preview ?? false
-  );
+  )
 
   // If article does not exist, return an error.
   if (!article) {
@@ -269,33 +270,33 @@ export const getStaticProps: GetStaticProps = async ({
         mappedUrl: getZendeskMappedUrl(),
         authHeader: ZENDESK_AUTH_HEADER,
       }
-    );
+    )
 
-    const subtitle = generateArticleErrorProps(dynamicContent).subtitle ?? '';
+    const subtitle = generateArticleErrorProps(dynamicContent).subtitle ?? ''
     return errorProps.notFound
       ? // When the error is notFound, router automatically redirects
-        // to 404 page which has its own logic for fetching props.
-        errorProps
+      // to 404 page which has its own logic for fetching props.
+      errorProps
       : // For other error types we have custom error handling logic inside
-        // ArticlePage component, so we pass ArticlePage's and error props.
-        {
-          props: {
-            ...errorProps,
-            pageTitle: `${subtitle} - ${SITE_TITLE}`,
-            strings,
-            menuOverlayItems,
-            siteUrl: getSiteUrl(),
-            articleId: Number(params?.article),
-            locale: currentLocale,
-            preview: preview ?? false,
-            metaTagAttributes: [],
-          },
-        };
+      // ArticlePage component, so we pass ArticlePage's and error props.
+      {
+        props: {
+          ...errorProps,
+          pageTitle: `${subtitle} - ${SITE_TITLE}`,
+          strings,
+          menuOverlayItems,
+          siteUrl: getSiteUrl(),
+          articleId: Number(params?.article),
+          locale: currentLocale,
+          preview: preview ?? false,
+          metaTagAttributes: [],
+        },
+      }
   }
 
   const [metaTagAttributes, content] = article.body
     ? extractMetaTags(article.body)
-    : [[], article.body];
+    : [[], article.body]
 
   return {
     props: {
@@ -312,5 +313,5 @@ export const getStaticProps: GetStaticProps = async ({
       menuOverlayItems,
       footerLinks,
     },
-  };
-};
+  }
+}
