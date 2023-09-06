@@ -1,12 +1,12 @@
 import { Directus } from '@directus/sdk'
 import CookieBanner from '@ircsignpost/signpost-base/dist/src/cookie-banner'
-import {
-  getDirectusAccessibility,
-  getDirectusArticles,
-  getDirectusPopulationsServed,
-  getDirectusProviders,
-  getDirectusServiceCategories,
-} from '@ircsignpost/signpost-base/dist/src/directus'
+// import {
+//   getDirectusAccessibility,
+//   getDirectusArticles,
+//   getDirectusPopulationsServed,
+//   getDirectusProviders,
+//   getDirectusServiceCategories,
+// } from '@ircsignpost/signpost-base/dist/src/directus'
 import { HeaderBannerStrings } from '@ircsignpost/signpost-base/dist/src/header-banner'
 import HomePage, {
   HomePageStrings,
@@ -63,6 +63,7 @@ import {
   populateSocialMediaLinks,
 } from '../lib/translations'
 import { getZendeskMappedUrl, getZendeskUrl } from '../lib/url'
+import { cachedDirectus } from '../lib/cacheddirectus'
 
 interface HomeProps {
   currentLocale: Locale
@@ -184,21 +185,29 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   await directus.auth.static(DIRECTUS_AUTH_TOKEN)
 
   console.log("index.tsx : Reading Directus articles")
-  const services = await getDirectusArticles(
-    DIRECTUS_COUNTRY_ID,
-    directus,
-    currentLocale.directus
-  )
+  // const services = await getDirectusArticles(
+  //   DIRECTUS_COUNTRY_ID,
+  //   directus,
+  //   currentLocale.directus
+  // )
+
+  const services = await cachedDirectus.articlesLocale(currentLocale.directus)
 
   services?.sort((a, b) =>
     a.name.normalize().localeCompare(b.name.normalize())
   )
 
   console.log("index.tsx : Reading Directus content")
-  const serviceTypes = await getDirectusServiceCategories(directus)
-  const providers = await getDirectusProviders(directus, DIRECTUS_COUNTRY_ID)
-  const populations = await getDirectusPopulationsServed(directus)
-  const accessibility = await getDirectusAccessibility(directus)
+  // const serviceTypes = await getDirectusServiceCategories(directus)
+  // const providers = await getDirectusProviders(directus, DIRECTUS_COUNTRY_ID)
+  // const populations = await getDirectusPopulationsServed(directus)
+  // const accessibility = await getDirectusAccessibility(directus)
+  // const accessibility = await getDirectusAccessibility(directus)
+
+  const serviceTypes = await cachedDirectus.serviceCategories()
+  const providers = await cachedDirectus.providers()
+  const populations = await cachedDirectus.populationsServed()
+  const accessibility = await cachedDirectus.accessibilities()
 
   return {
     props: {
