@@ -23,23 +23,8 @@ const __CACHED_PROVIDERS__ = "__CACHED_PROVIDERS__"
 const __CACHED_SERVICE_TYPES__ = "__CACHED_SERVICE_TYPES__"
 const __CACHED_POPULATIONS_SERVED__ = "__CACHED_POPULATIONS_SERVED__"
 
-async function getServices(directus: Directus<TypeMap, Auth>): Promise<DirectusArticle[]> {
-  const glb = global as any
 
-  let cachedServices: DirectusArticle[] = glb[__CACHED_SERVICES__]
-  if (!cachedServices) {
-    cachedServices = await getDirectusArticles(DIRECTUS_COUNTRY_ID, directus)
-    console.log("Cache initialized.")
-  }
-  cachedServices = cachedServices || []
-  glb[__CACHED_SERVICES__] = cachedServices
-
-  for (const s of cachedServices) {
-    s.translations ??= []
-  }
-
-  return cachedServices
-}
+const cache = {}
 
 class CachedDirectus {
 
@@ -55,7 +40,7 @@ class CachedDirectus {
   }
 
   async articles() {
-    const glb = global as any
+    const glb = cache as any
     const directus = await this.connector()
     let cached: DirectusArticle[] = glb[__CACHED_SERVICES__]
     if (!cached) {
@@ -74,7 +59,7 @@ class CachedDirectus {
   }
   async articlesLocale(locale: string) {
 
-    const glb = global as any
+    const glb = cache as any
     const directus = await this.connector()
 
     let cachedServices: DirectusArticle[] = glb[__CACHED_SERVICES_LOCALE__]
@@ -102,7 +87,7 @@ class CachedDirectus {
   }
 
   async accessibilities() {
-    const glb = global as any
+    const glb = cache as any
     const directus = await this.connector()
     let cached: DirectusAccessibility[] = glb[__CACHED_ACCESSIBILITIES__]
     if (!cached) {
@@ -115,7 +100,7 @@ class CachedDirectus {
   }
 
   async populationsServed() {
-    const glb = global as any
+    const glb = cache as any
     const directus = await this.connector()
     let cached: DirectusPopulations[] = glb[__CACHED_POPULATIONS_SERVED__]
     if (!cached) {
@@ -128,7 +113,7 @@ class CachedDirectus {
   }
 
   async providers() {
-    const glb = global as any
+    const glb = cache as any
     const directus = await this.connector()
     let cached: DirectusProvider[] = glb[__CACHED_PROVIDERS__]
     if (!cached) {
@@ -141,7 +126,7 @@ class CachedDirectus {
   }
 
   async serviceCategories() {
-    const glb = global as any
+    const glb = cache as any
     const directus = await this.connector()
     let cached: DirectusServiceCategory[] = glb[__CACHED_SERVICE_TYPES__]
     if (!cached) {
