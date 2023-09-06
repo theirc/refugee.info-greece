@@ -2,15 +2,11 @@ import { Auth, Directus, TypeMap } from '@directus/sdk'
 import { extractMetaTags } from '@ircsignpost/signpost-base/dist/src/article-content'
 import { getErrorResponseProps } from '@ircsignpost/signpost-base/dist/src/article-page'
 import CookieBanner from '@ircsignpost/signpost-base/dist/src/cookie-banner'
-
-// import {
-//   DirectusArticle,
-//   getDirectusArticle,
-//   getDirectusArticles,
-// } from '@ircsignpost/signpost-base/dist/src/directus'
-
-import { DirectusArticle } from '@ircsignpost/signpost-base/dist/src/directus'
-
+import {
+  DirectusArticle,
+  getDirectusArticle,
+  getDirectusArticles,
+} from '@ircsignpost/signpost-base/dist/src/directus'
 import Footer from '@ircsignpost/signpost-base/dist/src/footer'
 import { MenuOverlayItem } from '@ircsignpost/signpost-base/dist/src/menu-overlay'
 import { createDefaultSearchBarProps } from '@ircsignpost/signpost-base/dist/src/search-bar'
@@ -61,7 +57,6 @@ import {
   populateServicePageStrings,
 } from '../../lib/translations'
 import { getSiteUrl, getZendeskMappedUrl, getZendeskUrl } from '../../lib/url'
-import { cachedDirectus } from '../../lib/cacheddirectus'
 
 interface ServiceProps {
   pageTitle: string
@@ -153,16 +148,13 @@ export default function Service({
   )
 }
 
-// const __CACHED_SERVICES__ = "__CACHED_SERVICES__"
+const __CACHED_SERVICES__ = "__CACHED_SERVICES__"
 
 // async function getServices(directus: Directus<TypeMap, Auth>): Promise<DirectusArticle[]> {
 //   const glb = global as any
 
 //   let cachedServices: DirectusArticle[] = glb[__CACHED_SERVICES__]
-//   if (!cachedServices) {
-//     cachedServices = await getDirectusArticles(DIRECTUS_COUNTRY_ID, directus)
-//     console.log("Cache initialized.")
-//   }
+//   if (!cachedServices) cachedServices = await getDirectusArticles(DIRECTUS_COUNTRY_ID, directus)
 //   cachedServices = cachedServices || []
 //   glb[__CACHED_SERVICES__] = cachedServices
 
@@ -176,10 +168,9 @@ export default function Service({
 async function getStaticParams() {
   const directus = new Directus(DIRECTUS_INSTANCE)
   await directus.auth.static(DIRECTUS_AUTH_TOKEN)
-  // const services = await getDirectusArticles(DIRECTUS_COUNTRY_ID, directus)
+  const services = await getDirectusArticles(DIRECTUS_COUNTRY_ID, directus)
 
   // const services = await getServices(directus)
-  const services = await cachedDirectus.articles()
 
   const allowedLanguageCodes = Object.values(LOCALES).map(
     (locale) => locale.directus
@@ -286,10 +277,9 @@ export const getStaticProps: GetStaticProps = async ({
   const artid = Number(params?.service)
 
   // let service = cachedServices.find(s => s.id == artid) as DirectusArticle
-  let service = await cachedDirectus.article(artid)
 
   // console.log(`Found service with id ${service?.name}`)
-  // const service = await getDirectusArticle(Number(params?.service), directus)
+  const service = await getDirectusArticle(Number(params?.service), directus)
 
   const serviceTranslated = service.translations.filter(
     (x) => x.languages_id.code === currentLocale.directus
