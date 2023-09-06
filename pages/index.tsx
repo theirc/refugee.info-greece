@@ -184,7 +184,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const directus = new Directus(DIRECTUS_INSTANCE)
   await directus.auth.static(DIRECTUS_AUTH_TOKEN)
 
-  console.log("index.tsx : Reading Directus articles")
   const services = await getDirectusArticles(
     DIRECTUS_COUNTRY_ID,
     directus,
@@ -197,7 +196,15 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     a.name.normalize().localeCompare(b.name.normalize())
   )
 
-  console.log("index.tsx : Reading Directus content")
+  for (let n = 0; n < services.length; n++) {
+    const s = services[n]
+    const { Files, addHours, contactEmail, Physical_Location, date_created, date_updated,
+      contactTitle, secondaryEmail, contactInfo, contactLastName, country, form, headerimage, oldid, secondaryLastName, secondaryName, secondaryPhone,
+      user_updated, user_created, status, source, secondaryTitle, contactPhone, contactName, ...minified
+    } = s
+    services[n] = minified as any
+  }
+
   const serviceTypes = await getDirectusServiceCategories(directus)
   const providers = await getDirectusProviders(directus, DIRECTUS_COUNTRY_ID)
   const populations = await getDirectusPopulationsServed(directus)
