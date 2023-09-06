@@ -177,8 +177,7 @@ export async function getStaticPaths() {
         locale,
       }
     }),
-    fallback: false //Temporary patch to avoid some page errors! check later
-    // fallback: 'blocking',
+    fallback: 'blocking',
   }
 }
 

@@ -1,4 +1,4 @@
-import { Directus } from '@directus/sdk'
+import { Auth, Directus, TypeMap } from '@directus/sdk'
 import { extractMetaTags } from '@ircsignpost/signpost-base/dist/src/article-content'
 import { getErrorResponseProps } from '@ircsignpost/signpost-base/dist/src/article-page'
 import CookieBanner from '@ircsignpost/signpost-base/dist/src/cookie-banner'
@@ -148,10 +148,33 @@ export default function Service({
   )
 }
 
+const __CACHED_SERVICES__ = "__CACHED_SERVICES__"
+
+async function getServices(directus: Directus<TypeMap, Auth>): Promise<DirectusArticle[]> {
+  const glb = global as any
+
+  let cachedServices: DirectusArticle[] = glb[__CACHED_SERVICES__]
+  if (!cachedServices) {
+    cachedServices = await getDirectusArticles(DIRECTUS_COUNTRY_ID, directus)
+    console.log("Cache initialized.")
+  }
+  cachedServices = cachedServices || []
+  glb[__CACHED_SERVICES__] = cachedServices
+
+  for (const s of cachedServices) {
+    s.translations ??= []
+  }
+
+  return cachedServices
+}
+
 async function getStaticParams() {
   const directus = new Directus(DIRECTUS_INSTANCE)
   await directus.auth.static(DIRECTUS_AUTH_TOKEN)
-  const services = await getDirectusArticles(DIRECTUS_COUNTRY_ID, directus)
+  // const services = await getDirectusArticles(DIRECTUS_COUNTRY_ID, directus)
+
+  const services = await getServices(directus)
+
   const allowedLanguageCodes = Object.values(LOCALES).map(
     (locale) => locale.directus
   )
@@ -187,8 +210,8 @@ export async function getStaticPaths() {
         locale,
       }
     }),
-    // fallback: 'blocking',
-    fallback: false //Temporary patch to avoid some page errors! check later
+    fallback: 'blocking',
+    // fallback: false //Temporary patch to avoid some page errors! check later
   }
 }
 
@@ -252,20 +275,13 @@ export const getStaticProps: GetStaticProps = async ({
   const directus = new Directus(DIRECTUS_INSTANCE)
   await directus.auth.static(DIRECTUS_AUTH_TOKEN)
 
-  const glb = global as any
-
-  let cachedServices: DirectusArticle[] = glb["__CACHED_SERVICES__"]
-
-  if (!cachedServices) {
-    glb["__CACHED_SERVICES__"] = (await getDirectusArticles(DIRECTUS_COUNTRY_ID, directus)) || []
-  }
+  const cachedServices = await getServices(directus)
 
   const artid = Number(params?.service)
 
   let service = cachedServices.find(s => s.id == artid) as DirectusArticle
 
   // console.log(`Found service with id ${service?.name}`)
-
   // const service = await getDirectusArticle(Number(params?.service), directus)
 
   const serviceTranslated = service.translations.filter(
