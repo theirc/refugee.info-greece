@@ -1,31 +1,31 @@
-import { Directus } from '@directus/sdk';
-import CookieBanner from '@ircsignpost/signpost-base/dist/src/cookie-banner';
+import { Directus } from '@directus/sdk'
+import CookieBanner from '@ircsignpost/signpost-base/dist/src/cookie-banner'
 import {
   getDirectusAccessibility,
   getDirectusArticles,
   getDirectusPopulationsServed,
   getDirectusProviders,
   getDirectusServiceCategories,
-} from '@ircsignpost/signpost-base/dist/src/directus';
-import { HeaderBannerStrings } from '@ircsignpost/signpost-base/dist/src/header-banner';
+} from '@ircsignpost/signpost-base/dist/src/directus'
+import { HeaderBannerStrings } from '@ircsignpost/signpost-base/dist/src/header-banner'
 import HomePage, {
   HomePageStrings,
-} from '@ircsignpost/signpost-base/dist/src/home-page';
-import { MenuOverlayItem } from '@ircsignpost/signpost-base/dist/src/menu-overlay';
-import { ServiceMapProps } from '@ircsignpost/signpost-base/dist/src/service-map';
+} from '@ircsignpost/signpost-base/dist/src/home-page'
+import { MenuOverlayItem } from '@ircsignpost/signpost-base/dist/src/menu-overlay'
+import { ServiceMapProps } from '@ircsignpost/signpost-base/dist/src/service-map'
 import {
   CategoryWithSections,
   ZendeskCategory,
   getCategoriesWithSections,
-} from '@ircsignpost/signpost-base/dist/src/zendesk';
+} from '@ircsignpost/signpost-base/dist/src/zendesk'
 import {
   getArticle,
   getCategories,
   getTranslationsFromDynamicContent,
-} from '@ircsignpost/signpost-base/dist/src/zendesk';
-import type { NextPage } from 'next';
-import { GetStaticProps } from 'next';
-import getConfig from 'next/config';
+} from '@ircsignpost/signpost-base/dist/src/zendesk'
+import type { NextPage } from 'next'
+import { GetStaticProps } from 'next'
+import getConfig from 'next/config'
 
 import {
   ABOUT_US_ARTICLE_ID,
@@ -43,16 +43,16 @@ import {
   SITE_TITLE,
   USE_CAT_SEC_ART_CONTENT_STRUCTURE,
   ZENDESK_AUTH_HEADER,
-} from '../lib/constants';
+} from '../lib/constants'
 import {
   LOCALES,
   Locale,
   getLocaleFromCode,
   getZendeskLocaleId,
-} from '../lib/locale';
-import { getHeaderLogoProps } from '../lib/logo';
-import { getFooterItems, getMenuItems } from '../lib/menu';
-import { SocialMediaLinks, getSocialMediaProps } from '../lib/social-media';
+} from '../lib/locale'
+import { getHeaderLogoProps } from '../lib/logo'
+import { getFooterItems, getMenuItems } from '../lib/menu'
+import { SocialMediaLinks, getSocialMediaProps } from '../lib/social-media'
 import {
   COMMON_DYNAMIC_CONTENT_PLACEHOLDERS,
   HOME_PAGE_DYNAMIC_CONTENT_PLACEHOLDERS,
@@ -61,21 +61,21 @@ import {
   populateHomePageStrings,
   populateMenuOverlayStrings,
   populateSocialMediaLinks,
-} from '../lib/translations';
-import { getZendeskMappedUrl, getZendeskUrl } from '../lib/url';
+} from '../lib/translations'
+import { getZendeskMappedUrl, getZendeskUrl } from '../lib/url'
 
 interface HomeProps {
-  currentLocale: Locale;
-  strings: HomePageStrings;
-  headerBannerStrings: HeaderBannerStrings;
-  socialMediaLinks: SocialMediaLinks;
+  currentLocale: Locale
+  strings: HomePageStrings
+  headerBannerStrings: HeaderBannerStrings
+  socialMediaLinks: SocialMediaLinks
   // A list of |MenuOverlayItem|s to be displayed in the header and side menu.
-  menuOverlayItems: MenuOverlayItem[];
-  serviceMapProps: ServiceMapProps;
+  menuOverlayItems: MenuOverlayItem[]
+  serviceMapProps: ServiceMapProps
   // The HTML text of the About Us category shown on the home page.
-  aboutUsTextHtml: string;
-  categories: ZendeskCategory[] | CategoryWithSections[];
-  footerLinks?: MenuOverlayItem[];
+  aboutUsTextHtml: string
+  categories: ZendeskCategory[] | CategoryWithSections[]
+  footerLinks?: MenuOverlayItem[]
 }
 
 const Home: NextPage<HomeProps> = ({
@@ -89,7 +89,7 @@ const Home: NextPage<HomeProps> = ({
   categories,
   footerLinks,
 }) => {
-  const { publicRuntimeConfig } = getConfig();
+  const { publicRuntimeConfig } = getConfig()
 
   return (
     <HomePage
@@ -116,11 +116,11 @@ const Home: NextPage<HomeProps> = ({
         />
       }
     />
-  );
-};
+  )
+}
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const currentLocale: Locale = getLocaleFromCode(locale ?? 'en-us');
+  const currentLocale: Locale = getLocaleFromCode(locale ?? 'en-us')
   let dynamicContent = await getTranslationsFromDynamicContent(
     getZendeskLocaleId(currentLocale),
     COMMON_DYNAMIC_CONTENT_PLACEHOLDERS.concat(
@@ -128,46 +128,46 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     ),
     getZendeskUrl(),
     ZENDESK_AUTH_HEADER
-  );
+  )
 
-  let categories: ZendeskCategory[] | CategoryWithSections[];
-  let menuCategories: ZendeskCategory[] | CategoryWithSections[];
+  let categories: ZendeskCategory[] | CategoryWithSections[]
+  let menuCategories: ZendeskCategory[] | CategoryWithSections[]
   if (USE_CAT_SEC_ART_CONTENT_STRUCTURE) {
     categories = await getCategoriesWithSections(
       currentLocale,
       getZendeskUrl(),
       (c) => !CATEGORIES_TO_HIDE.includes(c.id)
-    );
+    )
     categories.forEach(({ sections }) => {
       sections.forEach(
         (s) => (s.icon = SECTION_ICON_NAMES[s.id] || 'help_outline')
-      );
-    });
+      )
+    })
     menuCategories = await getCategoriesWithSections(
       currentLocale,
       getZendeskUrl(),
       (c) => !MENU_CATEGORIES_TO_HIDE.includes(c.id)
-    );
+    )
   } else {
-    categories = await getCategories(currentLocale, getZendeskUrl());
-    categories = categories.filter((c) => !CATEGORIES_TO_HIDE.includes(c.id));
+    categories = await getCategories(currentLocale, getZendeskUrl())
+    categories = categories.filter((c) => !CATEGORIES_TO_HIDE.includes(c.id))
     categories.forEach(
       (c) => (c.icon = CATEGORY_ICON_NAMES[c.id] || 'help_outline')
-    );
-    menuCategories = await getCategories(currentLocale, getZendeskUrl());
+    )
+    menuCategories = await getCategories(currentLocale, getZendeskUrl())
     menuCategories = menuCategories.filter(
       (c) => !MENU_CATEGORIES_TO_HIDE.includes(c.id)
-    );
+    )
   }
 
   const menuOverlayItems = getMenuItems(
     populateMenuOverlayStrings(dynamicContent),
     menuCategories
-  );
+  )
   const footerLinks = getFooterItems(
     populateMenuOverlayStrings(dynamicContent),
     menuCategories
-  );
+  )
 
   const article = await getArticle(
     currentLocale,
@@ -175,28 +175,30 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     getZendeskUrl(),
     getZendeskMappedUrl(),
     ZENDESK_AUTH_HEADER
-  );
-  const aboutUsTextHtml = article ? article.body : '';
+  )
+  const aboutUsTextHtml = article ? article.body : ''
 
-  const strings = populateHomePageStrings(dynamicContent);
+  const strings = populateHomePageStrings(dynamicContent)
 
-  const directus = new Directus(DIRECTUS_INSTANCE);
-  await directus.auth.static(DIRECTUS_AUTH_TOKEN);
+  const directus = new Directus(DIRECTUS_INSTANCE)
+  await directus.auth.static(DIRECTUS_AUTH_TOKEN)
 
+  console.log("index.tsx : Reading Directus articles")
   const services = await getDirectusArticles(
     DIRECTUS_COUNTRY_ID,
     directus,
     currentLocale.directus
-  );
+  )
 
   services?.sort((a, b) =>
     a.name.normalize().localeCompare(b.name.normalize())
-  );
+  )
 
-  const serviceTypes = await getDirectusServiceCategories(directus);
-  const providers = await getDirectusProviders(directus, DIRECTUS_COUNTRY_ID);
-  const populations = await getDirectusPopulationsServed(directus);
-  const accessibility = await getDirectusAccessibility(directus);
+  console.log("index.tsx : Reading Directus content")
+  const serviceTypes = await getDirectusServiceCategories(directus)
+  const providers = await getDirectusProviders(directus, DIRECTUS_COUNTRY_ID)
+  const populations = await getDirectusPopulationsServed(directus)
+  const accessibility = await getDirectusAccessibility(directus)
 
   return {
     props: {
@@ -221,7 +223,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
       footerLinks,
     },
     revalidate: REVALIDATION_TIMEOUT_SECONDS,
-  };
-};
+  }
+}
 
-export default Home;
+export default Home
