@@ -198,8 +198,8 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
   for (let n = 0; n < services.length; n++) {
     const s = services[n]
-    const { Files, addHours, contactEmail, Physical_Location, date_created, date_updated,
-      contactTitle, secondaryEmail, contactInfo, contactLastName, country, form, headerimage, oldid, secondaryLastName, secondaryName, secondaryPhone,
+    const { Files, contactEmail, Physical_Location, date_created, date_updated,
+      contactTitle, secondaryEmail, contactLastName, country, form, headerimage, oldid, secondaryLastName, secondaryName, secondaryPhone,
       user_updated, user_created, status, source, secondaryTitle, contactPhone, contactName, ...minified
     } = s
     services[n] = minified as any
