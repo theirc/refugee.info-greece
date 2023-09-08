@@ -190,11 +190,8 @@ export async function getStringPaths(): Promise<string[]> {
   return params.map((param) => getStringPath(param.article, param.locale))
 }
 
-export const getStaticProps: GetStaticProps = async ({
-  params,
-  locale,
-  preview,
-}) => {
+export const getStaticProps: GetStaticProps = (async ({ params, locale, preview, }) => {
+
   const currentLocale = getLocaleFromCode(locale ?? '')
   let dynamicContent = await getTranslationsFromDynamicContent(
     getZendeskLocaleId(currentLocale),
@@ -313,4 +310,4 @@ export const getStaticProps: GetStaticProps = async ({
       footerLinks,
     },
   }
-}
+}) as any
