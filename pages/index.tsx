@@ -181,7 +181,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
   const strings = populateHomePageStrings(dynamicContent)
 
-  const directus = new Directus(DIRECTUS_INSTANCE)
+  const directus: any = new Directus(DIRECTUS_INSTANCE)
   await directus.auth.static(DIRECTUS_AUTH_TOKEN)
 
   const services = await getDirectusArticles(
