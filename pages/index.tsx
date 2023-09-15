@@ -192,9 +192,10 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
   // const services = await cachedDirectus.articlesLocale(currentLocale.directus)
 
-  services?.sort((a, b) =>
-    a.name.normalize().localeCompare(b.name.normalize())
-  )
+  services?.sort((a, b) => {
+    a.name = a.name || ""
+    return a.name.normalize().localeCompare(b.name.normalize())
+  })
 
   for (let n = 0; n < services.length; n++) {
     const s = services[n]
