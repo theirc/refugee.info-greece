@@ -189,9 +189,13 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     currentLocale.directus
   );
 
-  services?.sort((a, b) =>
-    a.name.normalize().localeCompare(b.name.normalize())
-  );
+  services?.sort((a, b) => {
+    // Check if a.name and b.name are not null or undefined before calling normalize()
+    const nameA = a?.name || '';
+    const nameB = b?.name || '';
+
+    return nameA.normalize().localeCompare(nameB.normalize());
+  });
 
   const serviceTypes = await getDirectusServiceCategories(directus);
   const providers = await getDirectusProviders(directus, DIRECTUS_COUNTRY_ID);

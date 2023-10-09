@@ -10,6 +10,7 @@ import { HomePageStrings } from '@ircsignpost/signpost-base/dist/src/home-page';
 import { CardsListStrings } from '@ircsignpost/signpost-base/dist/src/home-page-cards-list';
 import { PopupStrings } from '@ircsignpost/signpost-base/dist/src/map';
 import { SearchBarStrings } from '@ircsignpost/signpost-base/dist/src/search-bar';
+import { SearchInputStrings } from '@ircsignpost/signpost-base/dist/src/search-input';
 import { SearchResultsPageStrings } from '@ircsignpost/signpost-base/dist/src/search-results-page';
 import { SearchResultsStrings } from '@ircsignpost/signpost-base/dist/src/search-results-page-content';
 import { SectionStrings } from '@ircsignpost/signpost-base/dist/src/section-page';
@@ -85,6 +86,7 @@ export const HOME_PAGE_DYNAMIC_CONTENT_PLACEHOLDERS = [
   'default_distance_away_tooltip',
   'default_contact_button_label',
   'default_view_service_label',
+  'default_seach_input_text',
 ];
 
 export const CATEGORY_PLACEHOLDERS = [
@@ -164,6 +166,7 @@ export function populateServiceMapStrings(dynamicContent: {
     allServicesTypeOption: dynamicContent['default_all_services_type_option'],
     allProvidersOption: dynamicContent['default_all_providers_option'],
     allPopulationsOption: dynamicContent['default_all_populations_option'],
+    labelSearchInput: populateInputStrings(dynamicContent),
     allAccessibilitiesOption:
       dynamicContent['default_all_accessibilities_option'],
     distanceAwayStrings: {
@@ -377,6 +380,14 @@ export function populatePopupStrings(dynamicContent: {
   return {
     contactButtonLabel: dynamicContent['default_contact_button_label'],
     viewServiceLabel: dynamicContent['default_view_service_label'],
+  };
+}
+
+export function populateInputStrings(dynamicContent: {
+  [key: string]: string;
+}): SearchInputStrings {
+  return {
+    label: dynamicContent['default_seach_input_text'],
   };
 }
 
