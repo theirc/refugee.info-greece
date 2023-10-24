@@ -8,10 +8,10 @@ import { MenuOverlayItem } from '@ircsignpost/signpost-base/dist/src/menu-overla
 import { MenuItem } from '@ircsignpost/signpost-base/dist/src/select-menu';
 import { Section } from '@ircsignpost/signpost-base/dist/src/topic-with-articles';
 import {
-  getArticlesForSection,
   getCategories,
   getTranslationsFromDynamicContent,
 } from '@ircsignpost/signpost-base/dist/src/zendesk';
+import { block } from 'million/react';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import { useEffect, useState } from 'react';
@@ -39,7 +39,6 @@ import {
   COMMON_DYNAMIC_CONTENT_PLACEHOLDERS,
   getLastUpdatedLabel,
   populateCategoryStrings,
-  populateFilterSelectStrings,
   populateMenuOverlayStrings,
 } from '../../lib/translations';
 import { getZendeskUrl } from '../../lib/url';
@@ -58,7 +57,7 @@ interface CategoryProps {
   footerLinks?: MenuOverlayItem[];
 }
 
-export default function Category({
+export default block(function Category({
   currentLocale,
   pageTitle,
   categoryId,
@@ -114,7 +113,7 @@ export default function Category({
       signpostVersion={publicRuntimeConfig?.version}
     />
   );
-}
+});
 
 async function getStaticParams() {
   const categories = await Promise.all(

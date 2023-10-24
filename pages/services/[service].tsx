@@ -21,6 +21,7 @@ import {
   getCategoriesWithSections,
   getTranslationsFromDynamicContent,
 } from '@ircsignpost/signpost-base/dist/src/zendesk';
+import { block } from 'million/react';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -73,7 +74,7 @@ interface ServiceProps {
   service: DirectusArticle;
 }
 
-export default function Service({
+export default block(function Service({
   pageTitle,
   serviceId,
   pageUnderConstruction,
@@ -146,7 +147,7 @@ export default function Service({
       />
     </ServicePage>
   );
-}
+});
 
 async function getStaticParams() {
   const directus = new Directus(DIRECTUS_INSTANCE);

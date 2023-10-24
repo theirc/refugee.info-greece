@@ -21,6 +21,7 @@ import {
   getCategories,
   getTranslationsFromDynamicContent,
 } from '@ircsignpost/signpost-base/dist/src/zendesk';
+import { block } from 'million/react';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -74,7 +75,7 @@ interface ArticleProps {
   footerLinks?: MenuOverlayItem[];
 }
 
-export default function Article({
+export default block(function Article({
   pageTitle,
   articleTitle,
   articleId,
@@ -148,7 +149,7 @@ export default function Article({
       />
     </ArticlePage>
   );
-}
+});
 
 async function getStaticParams() {
   const articles = await Promise.all(

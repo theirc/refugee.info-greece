@@ -16,6 +16,7 @@ import {
   getSections,
   getTranslationsFromDynamicContent,
 } from '@ircsignpost/signpost-base/dist/src/zendesk';
+import { block } from 'million/react';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 import { useEffect, useState } from 'react';
@@ -61,7 +62,7 @@ interface CategoryProps {
   footerLinks?: MenuOverlayItem[];
 }
 
-export default function Category({
+export default block(function Category({
   currentLocale,
   pageTitle,
   sectionId,
@@ -100,7 +101,7 @@ export default function Category({
       signpostVersion={publicRuntimeConfig?.version}
     />
   );
-}
+});
 
 async function getStaticParams() {
   const sections = await Promise.all(

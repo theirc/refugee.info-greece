@@ -11,6 +11,7 @@ import {
   getCategoriesWithSections,
   getTranslationsFromDynamicContent,
 } from '@ircsignpost/signpost-base/dist/src/zendesk';
+import { block } from 'million/react';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 
@@ -58,7 +59,7 @@ interface SearchResultsPageProps {
   footerLinks?: MenuOverlayItem[];
 }
 
-export default function SearchResultsPage({
+export default block(function SearchResultsPage({
   currentLocale,
   strings,
   menuOverlayItems,
@@ -93,7 +94,7 @@ export default function SearchResultsPage({
       }
     />
   );
-}
+});
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const currentLocale: Locale = getLocaleFromCode(locale ?? 'en-us');

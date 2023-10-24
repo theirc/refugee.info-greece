@@ -23,6 +23,7 @@ import {
   getCategories,
   getTranslationsFromDynamicContent,
 } from '@ircsignpost/signpost-base/dist/src/zendesk';
+import { block } from 'million/react';
 import type { NextPage } from 'next';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
@@ -118,6 +119,8 @@ const Home: NextPage<HomeProps> = ({
     />
   );
 };
+
+const HomeBlock = block(Home);
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const currentLocale: Locale = getLocaleFromCode(locale ?? 'en-us');
@@ -224,4 +227,4 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   };
 };
 
-export default Home;
+export default HomeBlock;

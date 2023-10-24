@@ -11,6 +11,7 @@ import {
   getCategoriesWithSections,
   getTranslationsFromDynamicContent,
 } from '@ircsignpost/signpost-base/dist/src/zendesk';
+import { block } from 'million/react';
 import { GetStaticProps } from 'next';
 import getConfig from 'next/config';
 
@@ -53,7 +54,7 @@ interface Custom404Props {
   footerLinks?: MenuOverlayItem[];
 }
 
-export default function Custom404({
+export default block(function Custom404({
   currentLocale,
   title,
   strings,
@@ -81,7 +82,7 @@ export default function Custom404({
       }
     />
   );
-}
+});
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const currentLocale: Locale = getLocaleFromCode(locale ?? 'en-us');

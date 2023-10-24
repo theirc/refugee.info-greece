@@ -4,6 +4,7 @@
 // displays a page that redirects to the pathname in the selected locale.
 import { default as LocaleSelectPageBase } from '@ircsignpost/signpost-base/dist/src/locale-select-page';
 import type { Lang } from '@ircsignpost/signpost-base/dist/src/locale-select-page';
+import { block } from 'million/react';
 import Image from 'next/image';
 
 import { SITE_TITLE } from '../lib/constants';
@@ -47,7 +48,7 @@ const langs: Lang[] = [
  *
  * The page only shows the locale selection dialog to first time visitors.
  */
-export default function LocaleSelectPage() {
+export default block(function LocaleSelectPage() {
   return (
     <LocaleSelectPageBase
       siteTitle={SITE_TITLE}
@@ -56,4 +57,4 @@ export default function LocaleSelectPage() {
       image={<Image src={logo} alt="icon" />}
     />
   );
-}
+});
