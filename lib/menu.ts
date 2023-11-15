@@ -40,11 +40,7 @@ export function getMenuItems(
 ): MenuOverlayItem[] {
   let items: MenuOverlayItem[] = [];
   items.push({ key: 'home', label: strings.home, href: '/' });
-  items.push({
-    key: 'services',
-    label: strings.services, // Make sure this string is defined in your strings object
-    href: '/#service-map',
-  });
+
   if (USE_CAT_SEC_ART_CONTENT_STRUCTURE) {
     addMenuItemsCategories(items, categories as CategoryWithSections[]);
   } else {
@@ -96,6 +92,11 @@ function addMenuItemsInformation(
           href: '/categories/' + category.id.toString(),
         };
       }),
+    });
+    items.push({
+      key: 'services',
+      label: strings.services,
+      href: '/#service-map',
     });
   }
 }
