@@ -14,10 +14,10 @@ export const LOCALES: { [key: string]: Locale } = {
     directus: 'en-US',
   },
   ar: { url: 'ar', direction: 'rtl', name: 'العربية', directus: 'ar-SA' },
-  fa: { url: 'fa', direction: 'rtl', name: 'فارسی/ دری', directus: 'fa-FA' },
-  fr: { url: 'fr', direction: 'ltr', name: 'Français', directus: 'fr-FR' },
-  uk: { url: 'uk', direction: 'ltr', name: 'Українська', directus: 'uk-UK' },
-  ur: { url: 'ur', direction: 'rtl', name: 'اردو', directus: 'ur-UR' },
+  fa: { URL: 'fa', direction: 'rtl', name: 'فارسی/ دری', directus: 'fa-AF' },
+  fr: { URL: 'fr', direction: 'ltr', name: 'Français', directus: 'fr-FR' },
+  uk: { URL: 'uk', direction: 'ltr', name: 'Українська', directus: 'uk-UK' },
+  ur: { URL: 'ur', direction: 'rtl', name: 'اردو', directus: 'ur-UR' },
   so: { url: 'so', direction: 'ltr', name: 'Soomali', directus: 'so-SO' },
 };
 
