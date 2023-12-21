@@ -37,6 +37,9 @@ function Document() {
           src="//script.crazyegg.com/pages/scripts/0076/6807.js"
           async
         ></script>
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icon.png"></link>
+        <meta name="theme-color" content="#242629" />
         {/*
         TODO: get API Key from your Product manager, update src and uncomment the script.
         <script
