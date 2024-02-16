@@ -796,10 +796,10 @@
   resolved "https://registry.npmjs.org/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@ircsignpost/signpost-base@16.22.0":
-  version "16.22.0"
-  resolved "https://registry.yarnpkg.com/@ircsignpost/signpost-base/-/signpost-base-16.22.0.tgz#93f95068bd104af296174a07de7f6dc14eed5ca2"
-  integrity sha512-dbNNf9Vb8pzVUUDVMN/wELChNytk2Izt6E/dx+TJ0jOARqd+tJtuMBb5lEZCKMdcnOqtYAUIvZozRJB8SVXJxg==
+"@ircsignpost/signpost-base@16.28.0":
+  version "16.28.0"
+  resolved "https://registry.yarnpkg.com/@ircsignpost/signpost-base/-/signpost-base-16.28.0.tgz#4ad86c008d00530d13757b1318f7f84928d388a2"
+  integrity sha512-87hXgt6Nz4BMtKLSo87FeWLFSX8dMDtsIYaBD71c7G/+7BXmnxUlZEOa5fk9bmv3jI2y6UPLeXBy590KDBXCFQ==
 
 "@jridgewell/gen-mapping@^0.1.0":
   version "0.1.1"
