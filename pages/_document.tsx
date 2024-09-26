@@ -4,6 +4,10 @@ function Document() {
   return (
     <Html>
       <Head>
+        <link
+          href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
+          rel="stylesheet"
+        />
         <meta
           name="google-site-verification"
           content="PrE2eX5nD9nGPXSEETbC8TVgIhz80mc4aDlBisKUXN8"

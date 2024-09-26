@@ -30,11 +30,25 @@ import { GOOGLE_ANALYTICS_IDS } from '../lib/constants';
 
 import type { AppProps } from 'next/app';
 import { BreadcrumbsProvider } from '../context/BreadcrumbsContext';
+import Script from 'next/script';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <BreadcrumbsProvider>
-      <Analytics googleAnalyticsIds={GOOGLE_ANALYTICS_IDS}/>
+      <Analytics googleAnalyticsIds={GOOGLE_ANALYTICS_IDS} />
+      <Script
+        id="clarity-script"
+        strategy="afterInteractive" // Load script only after user interaction
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function(c,l,a,r,i,t,y){
+              c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "o8njqc0mp3");
+          `,
+        }}
+      />
       <Component {...pageProps} />
     </BreadcrumbsProvider>
   );
