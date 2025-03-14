@@ -85,8 +85,6 @@ export const HOME_PAGE_DYNAMIC_CONTENT_PLACEHOLDERS = [
   'ri_greece_facebook_link',
   'ri_greece_messenger_link',
   'ri_greece_whatsapp_link',
-  'ri_greece_whatsapp_channel_link',
-  'ri_greece_telegram_link',
   // Main body strings.
   'default_information_title',
   'ri_greece_information_description',
@@ -146,17 +144,9 @@ export function populateSocialMediaLinks(dynamicContent: {
       title: dynamicContent['default_banner_messenger_title'],
       href: dynamicContent['ri_greece_messenger_link'],
     },
-    telegramLink: {
-      title: dynamicContent['default_banner_telegram_title'],
-      href: dynamicContent['ri_greece_telegram_link'],
-    },
     whatsAppLink: {
       title: dynamicContent['default_banner_whatsapp_title'],
       href: dynamicContent['ri_greece_whatsapp_link'],
-    },
-    whatsAppChannelLink: {
-      title: dynamicContent['default_banner_whatsappchannel_title'],
-      href: dynamicContent['ri_greece_whatsapp_channel_link'],
     },
   };
 }
