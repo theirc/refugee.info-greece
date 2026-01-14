@@ -52,7 +52,6 @@ export const COMMON_DYNAMIC_CONTENT_PLACEHOLDERS = [
   'default_banner_facebook_title',
   'default_banner_instagram_title',
   'default_linkedin_label',
-  'default_banner_whatsapp_title',
   'default_banner_telegram_title',
   'default_banner_tiktok_title',
   'default_banner_twitter_title',
@@ -84,7 +83,6 @@ export const HOME_PAGE_DYNAMIC_CONTENT_PLACEHOLDERS = [
   'default_banner_whatsappchannel_title',
   'ri_greece_facebook_link',
   'ri_greece_messenger_link',
-  'ri_greece_whatsapp_link',
   // Main body strings.
   'default_information_title',
   'ri_greece_information_description',
@@ -143,10 +141,6 @@ export function populateSocialMediaLinks(dynamicContent: {
     messengerLink: {
       title: dynamicContent['default_banner_messenger_title'],
       href: dynamicContent['ri_greece_messenger_link'],
-    },
-    whatsAppLink: {
-      title: dynamicContent['default_banner_whatsapp_title'],
-      href: dynamicContent['ri_greece_whatsapp_link'],
     },
   };
 }
